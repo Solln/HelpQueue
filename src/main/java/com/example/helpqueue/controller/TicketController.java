@@ -3,49 +3,59 @@ package com.example.helpqueue.controller;
 import com.example.helpqueue.model.Ticket;
 import com.example.helpqueue.service.TicketServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
+
+// use tickets, as opposed to ticket
 @RestController
-@RequestMapping(path="/ticket")
+@RequestMapping(path="/tickets")
 public class TicketController {
+
+    /*
+    EFFECT WHOLE COLLECTION
+    /tickets
+
+     SINGLE RECORD IN COLLECTION
+    /tickets/{id}
+     */
 
     @Autowired
     TicketServiceImp ticketService;
 
-    @PostMapping("/create")
-    public boolean addTicket(@RequestBody Ticket ticket) {
-        return ticketService.create(ticket);
+    // Assume POST is create, don't require /create
+    @PostMapping("")
+    public ResponseEntity<Boolean> createTicket(@RequestBody Ticket ticket) {
+        return new ResponseEntity<>(ticketService.createTicket(ticket), HttpStatus.CREATED);
     }
 
-    @GetMapping(path="/all")
-    public @ResponseBody Iterable<Ticket> getAllTickets() {
-        return ticketService.readAll();
+    // Assume empty get gets all tickets
+    //?status=true || active - inactive
+    // if not get all
+    @GetMapping("")
+    public @ResponseBody ResponseEntity<Iterable<Ticket>> getAllTickets(@RequestParam(name="status", required=false) String status) {
+        return ResponseEntity.ok(ticketService.getTickets(status));
     }
 
-    @GetMapping(path="/id")
-    public Optional<Ticket> getTicketById(@RequestParam("id") Long id) {
-        return ticketService.findById(id);
+    //tickets/11
+    @GetMapping(path="/{id}")
+    public ResponseEntity<Optional<Ticket>> getTicketById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(ticketService.getTicket(id));
     }
 
-    @GetMapping(path="/status")
-    public Iterable<Ticket> getTicketByStatus(@RequestParam("status") String status) {
-        System.out.println("In Status");
-        return ticketService.findByTicketStatus(status);
+    @DeleteMapping(path="/{id}")
+    public ResponseEntity<Long> deletePost(@PathVariable Long id) {
+        ticketService.deleteTicket(id);
+        return new ResponseEntity<>(id, HttpStatus.OK);
     }
 
-    @GetMapping(path="/author")
-    public Iterable<Ticket> getTicketByAuthor(@RequestParam("author") String author) {
-        return ticketService.findByTicketAuthor(author);
+    @PutMapping("")
+    public ResponseEntity<Ticket> updateTicket(@RequestBody Ticket ticket) {
+        ticketService.updateTicket(ticket);
+        return new ResponseEntity<>(ticket, HttpStatus.OK);
     }
-
-
-    @GetMapping(path="/David")
-    public String whatisDavid() {
-        return "A bitch";
-    }
-
-
 
 }

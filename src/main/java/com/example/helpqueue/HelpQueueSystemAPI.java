@@ -2,13 +2,12 @@ package com.example.helpqueue;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-public class HelpQueueApplication {
+public class HelpQueueSystemAPI {
 
     public static void main(String[] args) {
-        SpringApplication.run(HelpQueueApplication.class, args);
+        SpringApplication.run(HelpQueueSystemAPI.class, args);
     }
 
 }

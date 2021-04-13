@@ -1,20 +1,43 @@
 package com.example.helpqueue.model;
 
 
+
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 public class Ticket {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name="title")
     private String title;
-    private String author;
+
+    @Column(name="authorID")
+    private Long authorID;
+
+    @Column(name="description")
     private String description;
-    private String timeStamp;
+
+    @Column(name="time_stamp")
+    private String time_stamp;
+
+    @Column(name="status")
     private String status;
+
+    public Ticket(){    }
+
+    public Ticket(Long id, String title, Long authorID, String description, String time_stamp, String status) {
+        this.id = id;
+        this.title = title;
+        this.authorID = authorID;
+        this.description = description;
+        this.time_stamp = time_stamp;
+        this.status = status;
+    }
+
 
     public Long getId() {
         return id;
@@ -32,12 +55,12 @@ public class Ticket {
         this.title = title;
     }
 
-    public String getAuthor() {
-        return author;
+    public Long getAuthorID() {
+        return authorID;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setAuthorID(Long author) {
+        this.authorID = author;
     }
 
     public String getDescription() {
@@ -48,12 +71,12 @@ public class Ticket {
         this.description = description;
     }
 
-    public String getTimeStamp() {
-        return timeStamp;
+    public String getTime_stamp() {
+        return time_stamp;
     }
 
-    public void setTimeStamp(String timeStamp) {
-        this.timeStamp = timeStamp;
+    public void setTime_stamp(String timeStamp) {
+        this.time_stamp = timeStamp;
     }
 
     public String getStatus() {
@@ -63,4 +86,18 @@ public class Ticket {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Ticket ticket = (Ticket) o;
+        return id.equals(ticket.id) &&
+                Objects.equals(title, ticket.title) &&
+                Objects.equals(authorID, ticket.authorID) &&
+                Objects.equals(description, ticket.description) &&
+                Objects.equals(time_stamp, ticket.time_stamp) &&
+                Objects.equals(status, ticket.status);
+    }
+
 }

@@ -1,15 +1,12 @@
 package com.example.helpqueue.service;
 
+import com.example.helpqueue.constants.TicketConstants;
 import com.example.helpqueue.model.Ticket;
 import com.example.helpqueue.repository.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 import java.util.Optional;
-import java.util.List;
 
 
 @Service
@@ -18,40 +15,43 @@ public class TicketServiceImp implements TicketService{
     @Autowired
     private TicketRepository ticketRepo;
 
+    @Autowired
+    private TicketConstants ticketConstants;
+
     @Override
-    public boolean create(Ticket ticket) {
+    public boolean createTicket(Ticket ticket) {
         //TODO logic for if save fails
         this.ticketRepo.save(ticket);
         return true;
     }
 
+    //getTickets
+        //Get All with no params
+
     @Override
-    public Iterable<Ticket> readAll(){
-        return this.ticketRepo.findAll();
+    public Iterable<Ticket> getTickets(String status){
+        // Checks for values in here
+        if (status != null){
+            return this.ticketRepo.findByStatus(status);
+        } else {
+            return this.ticketRepo.findAll();
+        }
     }
 
     @Override
-    public Optional<Ticket> findById(Long id) {
+    public Optional<Ticket> getTicket(Long id) {
         return ticketRepo.findById(id);
     }
 
     @Override
-    public List<Ticket> findByTicketStatus(String status) {
-        return ticketRepo.findByStatus(status);
+    public void updateTicket(Ticket updatedTicket) {
+//        Ticket originalticket = ticketRepo.findById(updatedTicket.getId()).get();
+        ticketRepo.save(updatedTicket);
     }
 
     @Override
-    public List<Ticket> findByTicketAuthor(String author) {
-        return ticketRepo.findByAuthor(author);
+    public void deleteTicket(Long id) {
+        ticketRepo.deleteById(id);
     }
 
-    @Override
-    public void update(Long id, Ticket ticket) {
-
-    }
-
-    @Override
-    public void delete(Long id) {
-
-    }
 }
